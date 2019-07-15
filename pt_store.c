@@ -32,10 +32,10 @@ void * purchases_n_loading (void *arg) {
 
 	    load = 100 * (COND_MIN_OF_LOAD + (rand() % COND_MAX_OF_LOAD));
 	    gl_shops[i] += load;
+
 	    printf("%d loaded %d products to shop_%d\n", *thread_num, load, i);
 
 	    pthread_mutex_unlock(&gl_mutex[i]);
-	    //sleep(1);
 	}
 	pthread_cleanup_pop(0);
     } else {
@@ -46,11 +46,11 @@ void * purchases_n_loading (void *arg) {
 	    pthread_mutex_lock(&gl_mutex[i]);
 
 	    purchase += gl_shops[i];
+
 	    printf("%d bought %d products from shop_%d\n", *thread_num, gl_shops[i], i);
 	    printf("\tneed: %d/%d\n", purchase, BUYER_NEED);
 
 	    pthread_mutex_unlock(&gl_mutex[i]);
-	    //sleep(1);
 	}
 	printf("!%d leave sales!\n", *thread_num);
 	pthread_exit(0);
@@ -62,7 +62,7 @@ int main () {
     int i = 0;
     int *j_status = calloc(NUM_OF_BUYERS + 1, sizeof(int));
     int *personal_val = calloc(NUM_OF_BUYERS + 1, sizeof(int));
-    pthread_t *thread = malloc((NUM_OF_BUYERS + 1) * sizeof(int));
+    pthread_t *thread = malloc((NUM_OF_BUYERS + 1) * sizeof(pthread_t));
     gl_shops = calloc(NUM_OF_SHOPS, sizeof(int));
     gl_mutex = malloc(NUM_OF_SHOPS * sizeof(pthread_mutex_t));
     for (i = 0; i < NUM_OF_SHOPS; i++) {
@@ -78,6 +78,9 @@ int main () {
     }
     for (i = NUM_OF_BUYERS; i > 0; i--) {
 	status = pthread_join(thread[i], (void **)&j_status[i]);
+	if (!status) {
+	    printf("thread %d joined with %d\n", personal_val[i], j_status[i]);
+	}
     }
     status = pthread_cancel(thread[0]);
     if (!status) {
@@ -86,6 +89,8 @@ int main () {
 	status = pthread_join(thread[0], (void **)&j_status[0]);
 	if (status) {
 	    perror("pthread_join() fault");
+	} else {
+	    printf("thread %d joined with %d\n", personal_val[0], j_status[0]);
 	}
     } else {
 	perror("pthread_cancel() fault");
@@ -93,7 +98,7 @@ int main () {
     free(j_status);
     free(personal_val);
     free(thread);
-    //free(gl_shops);
+    free(gl_shops);
     free(gl_mutex);
     return 0;
 }
