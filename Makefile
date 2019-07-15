@@ -9,3 +9,6 @@ cli:
 		rm -f $(name).o $(name)
 
 clean: cli
+
+mem:
+		valgrind --leak-check=full --show-leak-kinds=all ./$(name)
