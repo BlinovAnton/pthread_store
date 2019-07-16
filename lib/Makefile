@@ -4,8 +4,8 @@ prename = pt_store_
 CC = gcc
 FLAGS = -Wall -g -lpthread
 
-vpath %.h ../include
-vpath %.c ../src
+#vpath %.h ../include
+#vpath %.c ../src
 
 $(prename)func.o: $(prename)func.c
 		$(CC) -c -o $@ $< $(FLAGS)
