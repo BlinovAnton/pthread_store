@@ -1,4 +1,4 @@
-#include "pt_store_head.h"
+#include "../include/pt_store_head.h"
 
 extern int *gl_shops;
 extern pthread_mutex_t * gl_mutex;

@@ -1,4 +1,4 @@
-#include "pt_store_head.h"
+#include "../include/pt_store_head.h"
 
 int *gl_shops = NULL, status = 0;
 pthread_mutex_t * gl_mutex = NULL;
