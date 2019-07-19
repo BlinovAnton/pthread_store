@@ -1,4 +1,4 @@
-.PHONY: clean cli all kek mem
+.PHONY: clean cli all kek debug mem
 
 prename = pt_store_
 bin = main
@@ -8,23 +8,20 @@ SDIR = src
 LDIR = lib
 DIRS = $(SDIR) $(LDIR)
 
-#vpath %.h ./include
-#VPATH %.o $(SDIR) : $(LDIR)
-#vpath %.o $(LDIR) : $(SDIR)
-#vpath %.c $(SDIR) : $(LDIR)
+vpath %.o $(SDIR) : $(LDIR)
 
-#i'm not stupid, told you, vpath isn't working
+all: $(prename)func.o $(prename)main.o
+		$(CC) -o $(bin) $^ $(FLAGS)
+		strip $(bin)
 
-SHIT = $(SDIR)/$(prename)main.o $(LDIR)/$(prename)func.o
+debug: $(prename)func.o $(prename)main.o
+		$(CC) -o $(bin) $^ $(FLAGS)
 
-$(prename)funk.o:
+$(prename)func.o:
 		make -C $(LDIR)
 
 $(prename)main.o:
 		make -C $(SDIR)
-
-all: $(prename)funk.o $(prename)main.o
-		$(CC) -o $(bin) $(SHIT) $(FLAGS)
 
 cli:
 		rm -f $(SDIR)/*.o
